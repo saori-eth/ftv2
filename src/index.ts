@@ -1,17 +1,16 @@
-import { Provider } from "./Provider";
 import { ethers } from "ethers";
-const { DISCORD_WEBHOOK } = process.env;
+const { DISCORD_WEBHOOK, BASE_WS } = process.env;
 
 if (!DISCORD_WEBHOOK) console.error("DISCORD_WEBHOOK is not set");
 const CLUBS_ADDRESS = "0x31c116ee1a684E701A7b9bFDA0afE210eCB9E188";
 const usersAPI = "https://prod-api.kosetto.com/users/";
 const followersAPI = "http://http://127.0.0.1:5000/followers/";
-const provider = new Provider();
+const provider = new ethers.WebSocketProvider(BASE_WS);
 
 const factory = new ethers.Contract(
   CLUBS_ADDRESS,
   ["event CoinLaunched(uint256 indexed id, address indexed creator)"],
-  provider.provider
+  provider
 );
 
 factory.on("CoinLaunched", async (id, creator) => {
