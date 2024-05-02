@@ -1,0 +1,29 @@
+{
+  "name": "warpfun",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "_start": "npm run env -- node dist/index.js",
+    "start": "pnpm build && pnpm _start",
+    "dev": "nodemon --watch src --ext ts --exec \"pnpm build && pnpm _start\"",
+    "env": "dotenv -e .env",
+    "prod-start": "pm2 start pnpm --name \"new-pairs\" -- run start",
+    "prod-logs": "pm2 logs new-pairs",
+    "prod-stop": "pm2 stop new-pairs",
+    "prod-restart": "pm2 restart new-pairs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.9.0"
+  },
+  "dependencies": {
+    "ethers": "^6.12.0",
+    "dotenv-cli": "^7.4.1",
+    "nodemon": "^3.1.0",
+    "typescript": "^5.4.5"
+  }
+}
