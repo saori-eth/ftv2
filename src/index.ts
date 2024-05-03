@@ -2,7 +2,8 @@ import { ethers } from "ethers";
 const { DISCORD_WEBHOOK, BASE_WS } = process.env;
 
 if (!DISCORD_WEBHOOK || !BASE_WS) throw new Error("Missing env vars");
-const CLUBS_ADDRESS = "0x31c116ee1a684E701A7b9bFDA0afE210eCB9E188";
+const CLUBS_ADDRESS = "0x201e95f275F39a5890C976Dc8A3E1b4Af114E635";
+const clubLink = "https://www.friend.tech/clubs/";
 const usersAPI = "https://prod-api.kosetto.com/users/";
 const followersAPI = "http://http://127.0.0.1:5000/followers/";
 const provider = new ethers.WebSocketProvider(BASE_WS);
@@ -14,23 +15,31 @@ const clubs = new ethers.Contract(
 );
 
 clubs.on("CoinLaunched", async (id, creator) => {
-  console.log("CoinLaunched", id, creator);
   try {
     const res = await fetch(usersAPI + creator);
-    const { twitterUsername, holderCount, watchlistCount, userBio } =
-      await res.json();
-    const twitterRes = await fetch(followersAPI + twitterUsername);
-    const { description, followers } = await twitterRes.json();
+    const {
+      twitterUsername,
+      holderCount,
+      watchlistCount,
+      userBio,
+      ftUsername,
+      ftPfpUrl,
+    } = await res.json();
+    if (holderCount < 30 || holderCount === undefined) return;
     const discordMessage = {
       content: `
+      =================================================================================
       🚀 New Frientech Group Launched! 🚀
-      \n\n👤 Creator: ${twitterUsername} [twitter](https://x.com/${twitterUsername})
-      \n\n📈 Holder Count: ${holderCount}
-      \n\n🔍 Watchlist Count: ${watchlistCount}
-      \n\n📝 Bio: ${userBio}
-      \n\n📝 Twitter Description: ${description}
-      \n\n👥 Followers: ${followers}`,
+      \n [Club](${clubLink}${id}) ${id}
+      \n🖼️ [pfp](${ftPfpUrl})
+      \n👥 ft username: ${ftUsername}
+      \n👤 twitter username: ${twitterUsername} [twitter](https://x.com/${twitterUsername})
+      \n📈 Holder Count: ${holderCount}
+      \n🔍 Watchlist Count: ${watchlistCount}
+      =================================================================================
+      `,
     };
+    console.log(discordMessage);
     fetch(DISCORD_WEBHOOK, {
       method: "POST",
       headers: {
@@ -40,13 +49,6 @@ clubs.on("CoinLaunched", async (id, creator) => {
     });
   } catch (error) {
     console.error(error);
-    fetch(DISCORD_WEBHOOK, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ content: "An error occurred" }),
-    });
   }
 });
 
