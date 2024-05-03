@@ -4,6 +4,7 @@ const { DISCORD_WEBHOOK, BASE_WS } = process.env;
 if (!DISCORD_WEBHOOK || !BASE_WS) throw new Error("Missing env vars");
 const CLUBS_ADDRESS = "0x201e95f275F39a5890C976Dc8A3E1b4Af114E635";
 const clubLink = "https://www.friend.tech/clubs/";
+const clubAPI = "https://prod-api.kosetto.com/clubs/";
 const usersAPI = "https://prod-api.kosetto.com/users/";
 const followersAPI = "http://http://127.0.0.1:5000/followers/";
 const provider = new ethers.WebSocketProvider(BASE_WS);
@@ -21,16 +22,17 @@ clubs.on("CoinLaunched", async (id, creator) => {
       twitterUsername,
       holderCount,
       watchlistCount,
-      userBio,
       ftUsername,
       ftPfpUrl,
     } = await res.json();
+    // const { clubName, membersCount } = await clubRes.json();
     if (holderCount < 30 || holderCount === undefined) return;
     const discordMessage = {
       content: `
       =================================================================================
       🚀 New Frientech Group Launched! 🚀
       \n [Club](${clubLink}${id}) ${id}
+      \n\n Creator details
       \n🖼️ [pfp](${ftPfpUrl})
       \n👥 ft username: ${ftUsername}
       \n👤 twitter username: ${twitterUsername} [twitter](https://x.com/${twitterUsername})
