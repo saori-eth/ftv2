@@ -4,9 +4,8 @@ const { DISCORD_WEBHOOK, BASE_WS } = process.env;
 if (!DISCORD_WEBHOOK || !BASE_WS) throw new Error("Missing env vars");
 const CLUBS_ADDRESS = "0x201e95f275F39a5890C976Dc8A3E1b4Af114E635";
 const clubLink = "https://www.friend.tech/clubs/";
-const clubAPI = "https://prod-api.kosetto.com/clubs/";
 const usersAPI = "https://prod-api.kosetto.com/users/";
-const followersAPI = "http://http://127.0.0.1:5000/followers/";
+const buyBotLink = "https://ft-buy.vercel.app/";
 const provider = new ethers.WebSocketProvider(BASE_WS);
 
 const clubs = new ethers.Contract(
@@ -25,8 +24,7 @@ clubs.on("CoinLaunched", async (id, creator) => {
       ftUsername,
       ftPfpUrl,
     } = await res.json();
-    // const { clubName, membersCount } = await clubRes.json();
-    if (holderCount < 30 || holderCount === undefined) return;
+    if (holderCount < 20 || holderCount === undefined) return;
     const discordMessage = {
       content: `
       =================================================================================
@@ -38,6 +36,7 @@ clubs.on("CoinLaunched", async (id, creator) => {
       \n👤 twitter username: ${twitterUsername} [twitter](https://x.com/${twitterUsername})
       \n📈 Holder Count: ${holderCount}
       \n🔍 Watchlist Count: ${watchlistCount}
+      \n\n🤖 [Buy Bot](${buyBotLink}${id})
       =================================================================================
       `,
     };
