@@ -29,11 +29,8 @@ clubs.on("CoinLaunched", async (id, creator) => {
   try {
     const creatorRes = await fetch(usersAPI + creator);
     const creatorInfo = await creatorRes.json();
-    twitterUsername = creatorInfo.twitterUsername;
-    holderCount = creatorInfo.holderCount;
-    watchlistCount = creatorInfo.watchlistCount;
-    ftUsername = creatorInfo.ftUsername;
-    ftPfpUrl = creatorInfo.ftPfpUrl;
+    ({ twitterUsername, holderCount, watchlistCount, ftUsername, ftPfpUrl } =
+      creatorInfo);
   } catch (error) {
     console.log("failed to fetch creator details", id, creator);
   }
