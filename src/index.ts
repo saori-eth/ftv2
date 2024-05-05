@@ -6,10 +6,6 @@ const CLUBS_ADDRESS = "0x201e95f275F39a5890C976Dc8A3E1b4Af114E635";
 const clubLink = "https://www.friend.tech/clubs/";
 const usersAPI = "https://prod-api.kosetto.com/users/";
 const buyBotLink = "https://ft-buy.vercel.app/";
-const CLUB_API = "https://prod-api.kosetto.com/clubs/";
-const headers = {
-  Authorization: `${JWT}`,
-};
 
 const provider = new ethers.WebSocketProvider(BASE_WS);
 
@@ -27,15 +23,6 @@ const blacklist = [
 
 clubs.on("CoinLaunched", async (id, creator) => {
   if (blacklist.includes(creator.toLowerCase())) return;
-  let clubName, clubDescription;
-  try {
-    const clubRes = await fetch(CLUB_API + id, { headers });
-    const clubInfo = await clubRes.json();
-    clubName = clubInfo.clubName;
-    clubDescription = clubInfo.clubDescription;
-  } catch (error) {
-    console.log("failed to fetch club details", id, creator);
-  }
   let twitterUsername, holderCount, watchlistCount, ftUsername, ftPfpUrl;
   try {
     const creatorRes = await fetch(usersAPI + creator);
@@ -54,8 +41,6 @@ clubs.on("CoinLaunched", async (id, creator) => {
       ===================================================
       \n🚀 New Frientech Group Launched! 🚀
       [Club](${clubLink}${id}) ${id}
-      Club Name: ${clubName || "N/A"}
-      Club Description: ${clubDescription || "N/A"}
       \n Creator details
       [pfp](${ftPfpUrl})
       👥 ft username: ${ftUsername}
