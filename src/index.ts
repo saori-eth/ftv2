@@ -43,7 +43,7 @@ clubs.on("CoinLaunched", async (id, creator) => {
       \n👤 twitter username: ${twitterUsername} [twitter](https://x.com/${twitterUsername})
       \n📈 Holder Count: ${holderCount}
       \n🔍 Watchlist Count: ${watchlistCount}
-      \n\n🤖 [Buy Bot](${buyBotLink}${id})
+      \n\n🤖 [Buy Bot](${buyBotLink}${id}) ${id}
       =================================================================================
       `,
     };
