@@ -14,9 +14,11 @@ const clubs = new ethers.Contract(
   provider
 );
 
-const blacklist = ["0x0b28bdce48a29635cd7dc3a51a66d103e564c564"].map((str) =>
-  str.toLowerCase()
-);
+const blacklist = [
+  "0x0b28bdce48a29635cd7dc3a51a66d103e564c564",
+  "0xba615b00be84bc315d483f08cd94c84ce283caac",
+  "0xf9b7cf4be6f4cde37dd1a5b75187d431d94a4fcc",
+].map((str) => str.toLowerCase());
 
 clubs.on("CoinLaunched", async (id, creator) => {
   if (blacklist.includes(creator.toLowerCase())) return;
