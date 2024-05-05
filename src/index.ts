@@ -21,6 +21,8 @@ const blacklist = [
   "0xf9b7cf4be6f4cde37dd1a5b75187d431d94a4fcc",
   "0x4fd8c8e81c8c621a53156f05da5e2a901df0da3a",
   "0x1242714766dfd04f2422e5c38cdde7bb2ddec015",
+  "0xaf1874d1ab35a12b6cc41a256cf4379f0dbf9d87",
+  "0x512557c92e98b1d5e8d0665c62c4352ef7ec323f",
 ].map((str) => str.toLowerCase());
 
 clubs.on("CoinLaunched", async (id, creator) => {
