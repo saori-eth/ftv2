@@ -34,7 +34,7 @@ clubs.on("CoinLaunched", async (id, creator) => {
     if (holderCount < 20 || holderCount === undefined) return;
     const discordMessage = {
       content: `
-      =================================================================================
+      ===================================================
       \n🚀 New Frientech Group Launched! 🚀
       [Club](${clubLink}${id}) ${id}
       \n Creator details
@@ -44,7 +44,6 @@ clubs.on("CoinLaunched", async (id, creator) => {
       📈 Holder Count: ${holderCount}
       🔍 Watchlist Count: ${watchlistCount}
       \n🤖 [Buy Bot](${buyBotLink}${id}) ${id}
-      =================================================================================
       `,
     };
     console.log(discordMessage);
