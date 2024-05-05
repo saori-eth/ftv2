@@ -27,27 +27,35 @@ const blacklist = [
 
 clubs.on("CoinLaunched", async (id, creator) => {
   if (blacklist.includes(creator.toLowerCase())) return;
+  let clubName, clubDescription;
   try {
     const clubRes = await fetch(CLUB_API + id, { headers });
-    const { clubName, clubDescription } = await clubRes.json();
-    if (clubName === undefined) return;
+    const clubInfo = await clubRes.json();
+    clubName = clubInfo.clubName;
+    clubDescription = clubInfo.clubDescription;
+  } catch (error) {
+    console.log("failed to fetch club details", id, creator);
+  }
+  let twitterUsername, holderCount, watchlistCount, ftUsername, ftPfpUrl;
+  try {
     const creatorRes = await fetch(usersAPI + creator);
-    const {
-      twitterUsername,
-      holderCount,
-      watchlistCount,
-      ftUsername,
-      ftPfpUrl,
-    } = await creatorRes.json();
-    console.log(clubName, clubDescription);
-    if (holderCount < 20 || holderCount === undefined) return;
-    const discordMessage = {
-      content: `
+    const creatorInfo = await creatorRes.json();
+    twitterUsername = creatorInfo.twitterUsername;
+    holderCount = creatorInfo.holderCount;
+    watchlistCount = creatorInfo.watchlistCount;
+    ftUsername = creatorInfo.ftUsername;
+    ftPfpUrl = creatorInfo.ftPfpUrl;
+  } catch (error) {
+    console.log("failed to fetch creator details", id, creator);
+  }
+  if (holderCount < 20 || holderCount === undefined) return; // not enough holders
+  const discordMessage = {
+    content: `
       ===================================================
       \n🚀 New Frientech Group Launched! 🚀
       [Club](${clubLink}${id}) ${id}
-      Club Name: ${clubName}
-      Club Description: ${clubDescription}
+      Club Name: ${clubName || "N/A"}
+      Club Description: ${clubDescription || "N/A"}
       \n Creator details
       [pfp](${ftPfpUrl})
       👥 ft username: ${ftUsername}
@@ -56,8 +64,9 @@ clubs.on("CoinLaunched", async (id, creator) => {
       🔍 Watchlist Count: ${watchlistCount}
       \n🤖 [Buy Bot](${buyBotLink}${id}) ${id}
       `,
-    };
-    console.log(discordMessage);
+  };
+  console.log(discordMessage);
+  try {
     fetch(DISCORD_WEBHOOK, {
       method: "POST",
       headers: {
@@ -66,6 +75,7 @@ clubs.on("CoinLaunched", async (id, creator) => {
       body: JSON.stringify(discordMessage),
     });
   } catch (error) {
+    console.log("failed to send discord message", id, creator);
     console.error(error);
   }
 });
