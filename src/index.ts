@@ -35,7 +35,7 @@ clubs.on("CoinLaunched", async (id, creator) => {
   } catch (error) {
     console.log("failed to fetch creator details", id, creator);
   }
-  if (holderCount < 5 || holderCount === undefined) return; // not enough holders
+  if (holderCount < 15 || holderCount === undefined) return; // not enough holders
   const discordMessage = {
     content: `
       ===================================================
