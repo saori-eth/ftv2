@@ -1,11 +1,16 @@
 import { ethers } from "ethers";
-const { DISCORD_WEBHOOK, BASE_WS } = process.env;
+const { DISCORD_WEBHOOK, BASE_WS, JWT } = process.env;
 
 if (!DISCORD_WEBHOOK || !BASE_WS) throw new Error("Missing env vars");
 const CLUBS_ADDRESS = "0x201e95f275F39a5890C976Dc8A3E1b4Af114E635";
 const clubLink = "https://www.friend.tech/clubs/";
 const usersAPI = "https://prod-api.kosetto.com/users/";
 const buyBotLink = "https://ft-buy.vercel.app/";
+const CLUB_API = "https://prod-api.kosetto.com/clubs/";
+const headers = {
+  Authorization: `${JWT}`,
+};
+
 const provider = new ethers.WebSocketProvider(BASE_WS);
 
 const clubs = new ethers.Contract(
@@ -23,22 +28,28 @@ const blacklist = [
 clubs.on("CoinLaunched", async (id, creator) => {
   if (blacklist.includes(creator.toLowerCase())) return;
   try {
-    const res = await fetch(usersAPI + creator);
+    const clubRes = await fetch(CLUB_API + id, { headers });
+    const { clubName, clubDescription } = await clubRes.json();
+    if (clubName === undefined) return;
+    const creatorRes = await fetch(usersAPI + creator);
     const {
       twitterUsername,
       holderCount,
       watchlistCount,
       ftUsername,
       ftPfpUrl,
-    } = await res.json();
+    } = await creatorRes.json();
+    console.log(clubName, clubDescription);
     if (holderCount < 20 || holderCount === undefined) return;
     const discordMessage = {
       content: `
       ===================================================
       \n🚀 New Frientech Group Launched! 🚀
       [Club](${clubLink}${id}) ${id}
+      Club Name: ${clubName}
+      Club Description: ${clubDescription}
       \n Creator details
-      🖼️ [pfp](${ftPfpUrl})
+      [pfp](${ftPfpUrl})
       👥 ft username: ${ftUsername}
       👤 twitter username: ${twitterUsername} [twitter](https://x.com/${twitterUsername})
       📈 Holder Count: ${holderCount}
