@@ -35,15 +35,15 @@ clubs.on("CoinLaunched", async (id, creator) => {
     const discordMessage = {
       content: `
       =================================================================================
-      🚀 New Frientech Group Launched! 🚀
-      \n [Club](${clubLink}${id}) ${id}
-      \n\n Creator details
-      \n🖼️ [pfp](${ftPfpUrl})
-      \n👥 ft username: ${ftUsername}
-      \n👤 twitter username: ${twitterUsername} [twitter](https://x.com/${twitterUsername})
-      \n📈 Holder Count: ${holderCount}
-      \n🔍 Watchlist Count: ${watchlistCount}
-      \n\n🤖 [Buy Bot](${buyBotLink}${id}) ${id}
+      \n🚀 New Frientech Group Launched! 🚀
+      [Club](${clubLink}${id}) ${id}
+      \n Creator details
+      🖼️ [pfp](${ftPfpUrl})
+      👥 ft username: ${ftUsername}
+      👤 twitter username: ${twitterUsername} [twitter](https://x.com/${twitterUsername})
+      📈 Holder Count: ${holderCount}
+      🔍 Watchlist Count: ${watchlistCount}
+      \n🤖 [Buy Bot](${buyBotLink}${id}) ${id}
       =================================================================================
       `,
     };
