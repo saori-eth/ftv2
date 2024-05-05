@@ -14,7 +14,12 @@ const clubs = new ethers.Contract(
   provider
 );
 
+const blacklist = ["0x0b28bdce48a29635cd7dc3a51a66d103e564c564"].map((str) =>
+  str.toLowerCase()
+);
+
 clubs.on("CoinLaunched", async (id, creator) => {
+  if (blacklist.includes(creator.toLowerCase())) return;
   try {
     const res = await fetch(usersAPI + creator);
     const {
